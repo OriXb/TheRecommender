@@ -59,6 +59,9 @@ class TestWindow:
         self.create_login_widgets()
 
     def create_login_widgets(self):
+        """
+        Create widgets for the login screen.
+        """
 
         user_label = Label(self.window, text="Username:", font=font.Font(family="Arial", size=14), bg="lightblue")
         user_label.grid(row=2, column=2, columnspan=2)
@@ -80,13 +83,14 @@ class TestWindow:
         create_user_button.grid(row=5, column=3, columnspan=3, pady=10)
 
     def show_create_user_widgets(self):
-        # הסתרת שדות הכניסה והצגת שדות יצירת המשתמש
-        self.instruction_label.config(text="Create a New User")  # שינוי ההוראות
+        """
+        Create widgets for the create new user screen.
+        """
 
-        # הסרת שדות הכניסה
+        self.instruction_label.config(text="Create a New User")
         self.reset_screen_widgets()
 
-        # שדות יצירת משתמש
+        # Create user widgets
         user_label = Label(self.window, text="New Username:", font=font.Font(family="Arial", size=14), bg="lightblue")
         user_label.grid(row=2, column=2, columnspan=2)
         self.new_username_entry = Entry(self.window, width=30)
@@ -103,8 +107,9 @@ class TestWindow:
         create_button.grid(row=4, column=3, columnspan=3, pady=20)
 
     def login(self):
-
-        # פונקציה שמתבצעת בלחיצה על כפתור ה-Login
+        """
+        Function active when user try to connect, check in database if user info known.
+        """
         username = self.username_entry.get()
         password = self.password_entry.get()
         if db_manager.is_user_valid(username, password):
@@ -115,7 +120,9 @@ class TestWindow:
             self.show_alert("Login failed", "Username or password are wrong. Try again.")
 
     def create_user(self):
-        # פונקציה שמתבצעת בלחיצה על כפתור יצירת משתמש
+        """
+        Function to create a new user, and register him in database.
+        """
         new_username = self.new_username_entry.get()
         new_password = self.new_password_entry.get()
 
@@ -125,25 +132,24 @@ class TestWindow:
 
         db_manager.add_new_user(new_username, new_password)
         self.show_alert("User created", f"Creating user with Username: {new_username}, Password: {new_password}")
-        # כאן תוכל להוסיף לוגיקה לשמירת המשתמש החדש
 
-        # ניתן להחזיר את השדות הראשוניים או להודיע למשתמש שהמשתמש נוצר
         self.reset_to_login_widgets()
 
     def show_main_screen(self):
-        # הסתרת כל הווידג'טים מלבד הכותרת
+        """
+        Show main screen widgets.
+        """
         for widget in self.window.grid_slaves():
             if widget.grid_info()["row"] != 0:
                 widget.grid_forget()
 
-        # עדכון הכותרת אם תרצה
         self.title_label.config(text="Welcome to the Recommender System")
 
-        # הוספת תוכן חדש למסך הראשי
         welcome_label = Label(self.window, text="You have successfully logged in!",
                               font=font.Font(family="Arial", size=18, weight="bold"), bg="lightblue", fg=BLUE_COLOR)
         welcome_label.grid(row=1, column=0, columnspan=9, pady=20)
 
+        # If user already finished setup.
         if db_manager.is_user_active(self.user_id):
 
             # Go to main menu
@@ -161,6 +167,7 @@ class TestWindow:
                                       bg=DARKEST_BLUE, command=self.in_progress_features)
             main_menu_button.grid(row=4, column=3, columnspan=3, pady=10)
 
+        # If user didn't already finish setup.
         else:
 
             # start setup
@@ -183,7 +190,9 @@ class TestWindow:
         pass
 
     def setup_menu(self):
-        # Setup user info menu
+        """
+        Set setup menu widgets.
+        """
         self.reset_screen_widgets()
         self.title_label.config(text="The Recommender Setup")
 
@@ -204,6 +213,9 @@ class TestWindow:
         start_setup.grid(row=5, column=0, columnspan=9, pady=10)
 
     def setup_menu_langs_one(self):
+        """
+        Setup first step-user select known langs.
+        """
         self.reset_screen_widgets()
         desc_label_one = Label(self.window,
                                text="Please select the languages you want!",
@@ -229,18 +241,18 @@ class TestWindow:
         popular_lang_three = Checkbutton(text=langs[2], variable=lang_three_checked)
         popular_lang_three.grid(column=5, row=3)
 
-        # משתנה לאחסון הבחירה
+        # Var to store user selections.
         selected_language = StringVar(self.window)
         selected_language.set("Other languages?")  # ערך ברירת המחדל
 
         langs_to_select = langs[3:]
 
-        # תפריט נפתח לשפות
+        # Dropdown to other langs.
         dropdown = OptionMenu(self.window, selected_language, *langs_to_select)
         dropdown.config(width=40)
         dropdown.grid(row=4, column=0, columnspan=9, pady=20)
 
-        # langs that were added, default None
+        # langs that were added by user will be show here.
         langs_added = Label(self.window,
                             text="",
                             font=font.Font(family="Arial", size=12),
@@ -322,6 +334,9 @@ class TestWindow:
         keep_going.grid(row=8, column=0, columnspan=9, pady=10)
 
     def setup_menu_genres_two(self):
+        """
+        Setup step two-user select loved genres.
+        """
         self.reset_screen_widgets()
         desc_label_one = Label(self.window,
                                text="Please select the genres you like!",
@@ -382,7 +397,11 @@ class TestWindow:
         keep_going.grid(row=9, column=0, columnspan=9, pady=10)
 
     def setup_menu_content_three(self):
-
+        """
+        User select loved content from generated content that he may like based on previous selections.
+        and the program after selection analyze the selected content in the Brain and add that info the user data
+        in the database.
+        """
         self.reset_screen_widgets()
         desc_label_one = Label(self.window,
                                text="We've prepared movies and series that you might enjoy!",
@@ -489,6 +508,9 @@ class TestWindow:
         keep_going.grid(row=11, column=0, columnspan=9, pady=30)
 
     def end_setup(self):
+        """
+        Finished setup screen.
+        """
         self.reset_screen_widgets()
         desc_label_one = Label(self.window,
                                text="You finished the setup!",
@@ -521,18 +543,13 @@ class TestWindow:
         keep_going.grid(row=11, column=0, columnspan=9, pady=30)
 
     def reset_to_login_widgets(self):
-        # הסתרת שדות יצירת המשתמש והחזרת שדות הכניסה
+
         for widget in self.window.grid_slaves():
             if widget.grid_info()["row"] in [2, 3, 4]:
-                widget.grid_forget()  # הסתרת שדות הכניסה
+                widget.grid_forget()
 
         self.instruction_label.config(text="Please enter your user or create new one")  # החזרת ההוראות
-        self.create_login_widgets()  # החזרת שדות הכניסה
-
-    def image(self, path: str):
-        img = Image.open(path)
-        self.tk_img = ImageTk.PhotoImage(img)
-        # self.canvas.create_image(250, 120, image=self.tk_img)
+        self.create_login_widgets()
 
     def show_alert(self, msg_title: str, msg: str):
         messagebox.showinfo(msg_title, msg)

@@ -1,21 +1,24 @@
 import random
-
-from content_manager import Content
 import data
 
 
 class Brain:
 
     def __init__(self):
+        """
+        In creation, set the needed vars.
+        """
+        # Info selected by a user.
         self.loved_genres_selected = {"tv": set(), "movie": set()}  # {}
 
+        # Info learned about a user.
         self.loved_genres_generator = {"tv": set(), "movie": set()}  # {}
         self.loved_original_lang = set()
         self.loved_content_origin = set()
         self.loved_actors = set()
         self.loved_directors = set()
 
-        # var for setup
+        # vars for setup
         self.already_viewed = {"content": set(),
                                "pages": {
                                    "get_popular_tvshows": 1,
@@ -26,19 +29,20 @@ class Brain:
                                }}
 
     def set_loved_genres(self, loved_genres: set):
+        """
+        Set the selected user loved genres.
+        """
         self.loved_genres_selected = loved_genres
 
     def set_loved_content(self, loved_content: list):
+        """
+        Analyze selected loved content, and analyze it and make conclusions.
+        """
 
         content_count = len(loved_content)
 
         # dict that track the number a genre apper in loved movies & shows
         potential_loved_genres = {}
-
-        # number of the avg popularity of the popularity rating in the selected movies & shows
-        # that can indicate whether the user prefer more or less popular content
-        sum_popularity = 0
-        final_avg_popularity = 0
 
         # the lang that apper in most selected shows/movies
         potential_loved_langs = {"en": 0}
@@ -63,8 +67,6 @@ class Brain:
                     potential_loved_genres[genre] = potential_loved_genres[genre] + 1
                 else:
                     potential_loved_genres[genre] = 1
-
-            # sum_popularity = sum_popularity + movie["popularity"]
 
             # LANGS
             if content_info["original_language"] in potential_loved_langs:
@@ -137,8 +139,6 @@ class Brain:
             elif potential_loved_directors[director] > 2:
                 self.loved_directors.add(director)
 
-        # self.loved_avg_popularity = (sum_popularity / movies_count)
-
     def set_selected_genres(self, genres: set):
         self.loved_genres_selected = genres
 
@@ -158,6 +158,9 @@ class Brain:
         return self.loved_genres_generator.union(self.loved_genres_selected)
 
     def print_all(self):
+        """
+        TEMP func for testing.
+        """
         print(self.loved_content_origin)
         print(self.loved_original_lang)
         print(self.loved_directors)
@@ -169,7 +172,6 @@ class Brain:
         """
         Get 10 contents (2 rows of 5) to show in the setup for user to select.
         """
-
         def get_popular_tvshows(amount: int):
 
             to_be_returned = []

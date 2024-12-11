@@ -142,6 +142,9 @@ def get_poster(content: Content, saving_file="images", width=500) -> str:
 
 
 def get_content_by_genre(content_type: str, genres: set, from_page=1, to_page=1, language_code="en"):
+    """
+        Return list of content by selected genres.
+    """
     # transform set into string
     genres_str = ",".join(str(genre_id) for genre_id in genres)
 
@@ -176,7 +179,11 @@ def convert_into_content_list(list_to_convert: list, content_type: str, content_
                         list_to_convert]
     return new_content_list
 
+
 def get_available_langs():
+    """
+        Return list of available langs that can be select.
+    """
     csv_file_path = "sources/language_codes.csv"
 
     languages = []
@@ -187,7 +194,11 @@ def get_available_langs():
                 languages.append(row[0])  # קריאת עמודת השפות
     return languages
 
+
 def get_lang_code(lang_name: str):
+    """
+        Return lang code by selected lang name.
+    """
     csv_file_path = "sources/language_codes.csv"
 
     languages = {}
